@@ -1,0 +1,71 @@
+﻿начальная настройка
+git config --global user.name "Your Name"
+git config --global user.email "your_email@whatever.com"
+git config --list
+
+настройка окончаний
+git config --global core.autocrlf false
+https://habr.com/ru/post/703072/
+
+вывод лога
+git config --global alias.hist "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short"
+
+указать редактор
+git config core.editor notepad
+vim Выход Esc : wq
+
+связать с удаленным репозиторием
+git remote add origin https://github.com/Embersong/test2.git
+
+загрузить в удаленный репозиторий локальный
+git push origin master
+
+создание и переключение веток
+git checkout -b iss53
+или
+git branch iss53
+git checkout iss53
+
+коммит изменений
+git commit -a -m 'Create new footer [issue 53]'
+или 
+git add имя.файла для -a
+
+git checkout master
+
+git checkout -b hotfix
+vim index.html
+git commit -a -m 'Fix broken email address'
+
+git checkout master
+git merge hotfix
+git branch -d hotfix
+
+git checkout iss53
+vim index.html
+git commit -a -m 'Finish the new footer [issue 53]'
+
+слияние веток
+git checkout master
+git merge iss53
+
+удаление ветки
+git branch -d iss53
+
+включить gui
+gitk
+
+если не пушится и нужно сбросить настройки
+git config --global credential.github.com.interactive always
+git config --global credential.github.com.interactive auto
+git config --global --unset credential.helper
+
+сброс на винде
+cmdkey /delete:LegacyGeneric:target=git:https://github.com
+
+удалить связь с origin
+git remote rm origin
+
+связь через токен
+git remote add origin https://token@github.com/Embersongs/test.git
+git remote set-url origin https://token@github.com/Embersongs/test
