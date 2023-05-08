@@ -15,8 +15,10 @@ function createTablePostsQuery(): string
                 title varchar NOT NULL,
                 content varchar NOT NULL,
                 id_category int NOT NULL,
-                FOREIGN KEY (id_category) REFERENCES public.categories (id)
+                image varchar,
+                FOREIGN KEY (id_category) REFERENCES public.categories (id) ON DELETE CASCADE
                 );";
+
 }
 
 function insertCategoryQuery($name_category): string
@@ -24,7 +26,7 @@ function insertCategoryQuery($name_category): string
     return "INSERT INTO public.categories(name) VALUES('$name_category');";
 }
 
-function insertPostQuery($title, $content, $id_category): string
+function insertPostQuery($title, $content, $id_category, $image = 0): string
 {
-    return "INSERT INTO public.posts(title, content, id_category) VALUES('$title', '$content', '$id_category');";
+    return "INSERT INTO public.posts(title, content, id_category, image) VALUES('$title', '$content', '$id_category', '$image');";
 }
