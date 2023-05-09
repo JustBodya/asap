@@ -1,5 +1,7 @@
 <?php
 include dirname(__DIR__) . "/functions/db.php";
+include dirname(__DIR__) . '/functions/auth.php';
+
 
 $messages = [
     'add' => 'Категория добавлена',

@@ -1,4 +1,6 @@
 <?php
+include __DIR__ . '/functions/auth.php';
+
 $title = "О нас";
 ?>
 

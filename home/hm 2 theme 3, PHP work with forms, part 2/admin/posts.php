@@ -1,31 +1,7 @@
 <?php
 include dirname(__DIR__) . "/functions/db.php";
-include dirname(__DIR__) . "/functions/resize.php";
-
-function createPost(string $title, mixed $content, $id_category): PDOStatement|false
-{
-    if (!empty($_FILES['image']['name'])) {
-        $image_name = $_FILES['image']['name']; // в бд улетит имя файла
-        $tmpImageName = $_FILES['image']['tmp_name'];
-        $uploadFile = dirname(__DIR__) . "/uploads/" . basename($_FILES['image']['name']); // в бд улетит путь файла
-        move_uploaded_file($tmpImageName, $uploadFile);
-        $result = getConnection()->prepare("INSERT INTO posts (title, content, id_category, image) VALUES (?, ?, ?, ?)");
-        $result->execute([$title, $content, $id_category, $image_name]);
-    } else {
-        $result = getConnection()->prepare("INSERT INTO posts (title, content, id_category) VALUES (?, ?, ?)");
-        $result->execute([$title, $content, $id_category]);
-    }
-    return $result;
-}
-
-function saveImage(): string
-{
-    $img = $_FILES['image']['name']; // в бд улетит имя файла
-    $tmpImageName = $_FILES['image']['tmp_name'];
-    $uploadFile = dirname(__DIR__) . "/uploads/" . basename($img); // в бд улетит путь файла
-    move_uploaded_file($tmpImageName, $uploadFile);
-    return $img;
-}
+include dirname(__DIR__) . '/functions/auth.php';
+include dirname(__DIR__) . '/functions/workPosts.php';
 
 $messages = [
     'del' => 'Пост удален',
@@ -47,6 +23,28 @@ $edit_post = [
 $action = "add";
 $formText = "добавить";
 $category = 0;
+
+// create
+if (!empty($_POST) && $_GET['action'] == 'add') {
+    $title = strip_tags($_POST['title']);
+    $id_category = $_POST['id_category'];
+    $content = $_POST['content'];
+
+    $result = createPost($title, $content, $id_category);
+
+    header("Location: /admin/posts.php?status=add");
+    die();
+}
+
+// delete
+if (isset($_GET['action']) && $_GET['action'] == 'delete') {
+    $id = (int)$_GET['id'];
+    $result = getConnection()->prepare("DELETE FROM posts WHERE id = :id");
+    $result->execute(['id' => $id]);
+
+    header("Location: /admin/posts.php?status=del");
+    die();
+}
 
 //edit
 if (!empty($_GET['action']) && $_GET['action'] == 'edit') {
@@ -81,28 +79,6 @@ if (!empty($_POST) && $_GET['action'] == 'save') {
     $result->execute(['title' => $title, 'content' => $content, 'id_category' => $id_category, 'image' => $image_name, 'id' => $id]);
 
     header("Location: /admin/posts.php?status=edit");
-    die();
-}
-
-// create
-if (!empty($_POST) && $_GET['action'] == 'add') {
-    $title = strip_tags($_POST['title']);
-    $id_category = $_POST['id_category'];
-    $content = $_POST['content'];
-
-    $result = createPost($title, $content, $id_category);
-
-    header("Location: /admin/posts.php?status=add");
-    die();
-}
-
-// delete
-if (isset($_GET['action']) && $_GET['action'] == 'delete') {
-    $id = (int)$_GET['id'];
-    $result = getConnection()->prepare("DELETE FROM posts WHERE id = :id");
-    $result->execute(['id' => $id]);
-
-    header("Location: /admin/posts.php?status=del");
     die();
 }
 
@@ -153,7 +129,7 @@ $options = $resultOptions->fetchAll();
     <br>
 
     <?php if (isset($_GET['action']) == 'edit' && !empty($edit_post['image'])) : ?>
-        <img src="../uploads/<?= $edit_post['image'] ?>">
+        <img src="/uploads/<?= $edit_post['image'] ?>" width="200">
         <br>
         <input type="checkbox" name="checkDelImage" id="del_image">
         <label for="del_image">Удалить изображение</label>

@@ -1,5 +1,7 @@
 <?php
 include __DIR__ . "/functions/db.php";
+include __DIR__ . '/functions/auth.php';
+
 $title = "Категории";
 $result = getConnection()->query("SELECT * FROM categories");
 $categories = $result->fetchAll();

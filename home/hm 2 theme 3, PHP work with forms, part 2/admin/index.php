@@ -1,4 +1,5 @@
 <?php
+include dirname(__DIR__) . '/functions/auth.php';
 ?>
 <!doctype html>
 <html lang="en">

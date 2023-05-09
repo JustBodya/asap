@@ -1,5 +1,7 @@
 <?php
 include __DIR__ . '/functions/db.php';
+include __DIR__ . '/functions/auth.php';
+
 
 $title = "Пост";
 
@@ -32,7 +34,7 @@ $post = $result->fetch();
 <p>Заголовок поста: <?= $post['title'] ?></p> <br>
 <p>Контент: <?= $post['content'] ?></p> <br>
 <?php if (!empty($post['image'])) : ?>
-    <img src="uploads/<?= $post['image'] ?>" alt="<?= $post['image'] ?>">
+    <img src="uploads/<?= $post['image'] ?>" alt="<?= $post['image'] ?>" width="200">
 <?php endif; ?>
 </body>
 </html>

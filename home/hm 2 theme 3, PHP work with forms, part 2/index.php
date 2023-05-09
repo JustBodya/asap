@@ -1,4 +1,5 @@
 <?php
+include __DIR__ . '\functions\auth.php';
 $title = "Главная";
 ?>
 <!doctype html>
