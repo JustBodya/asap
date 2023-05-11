@@ -56,3 +56,8 @@ function insertRolesQuery($name): string
     return "INSERT INTO public.roles(name) VALUES('$name');";
 }
 
+function insertUsersQuery($login, $password, $role): string
+{
+    return "INSERT INTO public.users(login, password, role) VALUES('$login', '$password', '$role');";
+}
+

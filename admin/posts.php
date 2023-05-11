@@ -2,9 +2,6 @@
 include dirname(__DIR__) . "/functions/db.php";
 include dirname(__DIR__) . '/functions/auth.php';
 include dirname(__DIR__) . '/functions/workPosts.php';
-include dirname(__DIR__) . '/functions/isAdmin.php';
-
-isAdmin();
 
 $messages = [
     'del' => 'Пост удален',
@@ -93,67 +90,70 @@ $posts = $resultPosts->fetchAll();
 $resultOptions = getConnection()->query("SELECT id, name FROM categories");
 $options = $resultOptions->fetchAll();
 ?>
+<?php if (isAdmin()) : ?>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Админка посты</title>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
+    <header>
+        <?php include dirname(__DIR__) . "./widgets/admin.php" ?>
+    </header>
+    <h1 class="title">CRUD Посты</h1>
+    <h3 class="change"><?= $message ?></h3>
+    <form action="?action=<?= $action ?>" method="post" enctype="multipart/form-data">
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Админка посты</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-<header>
-    <?php include dirname(__DIR__) . "./widgets/admin.php" ?>
-</header>
-<h1 class="title">CRUD Посты</h1>
-<h3 class="change"><?= $message ?></h3>
-<form action="?action=<?= $action ?>" method="post" enctype="multipart/form-data">
+        <label for="title">Заголовок поста</label>
+        <input id="title" class="input" type="text" name="title" value="<?= $edit_post['title'] ?>"> <br> <br>
 
-    <label for="title">Заголовок поста</label>
-    <input id="title" class="input" type="text" name="title" value="<?= $edit_post['title'] ?>"> <br> <br>
+        <label for="category">Категории</label>
+        <input hidden type="text" name="id" value="<?= $edit_post['id'] ?>">
 
-    <label for="category">Категории</label>
-    <input hidden type="text" name="id" value="<?= $edit_post['id'] ?>">
+        <select name="id_category" id="category">
+            <?php foreach ($options as $i) : ?>
+                <option <?php if ($i['id'] == $edit_post['id_category']): ?> selected <?php endif ?>
+                    value="<?= $i['id'] ?>"><?= $i['name'] ?></option>
+            <?php endforeach; ?>
+        </select> <br> <br>
 
-    <select name="id_category" id="category">
-        <?php foreach ($options as $i) : ?>
-            <option <?php if ($i['id'] == $edit_post['id_category']): ?> selected <?php endif ?>
-                value="<?= $i['id'] ?>"><?= $i['name'] ?></option>
-        <?php endforeach; ?>
-    </select> <br> <br>
-
-    <div>
-        <label for="content">Контент</label>
-        <textarea id="content" class="input" name="content" cols="30"><?= $edit_post['content'] ?></textarea>
-    </div>
-    <br>
-
-    <?php if (isset($_GET['action']) == 'edit' && !empty($edit_post['image'])) : ?>
-        <img src="/uploads/<?= $edit_post['image'] ?>" width="200">
+        <div>
+            <label for="content">Контент</label>
+            <textarea id="content" class="input" name="content" cols="30"><?= $edit_post['content'] ?></textarea>
+        </div>
         <br>
-        <input type="checkbox" name="checkDelImage" id="del_image">
-        <label for="del_image">Удалить изображение</label>
-    <?php endif; ?>
-    <br>
-    <label for="img">Загрузите изображение</label>
-    <input type="file" id="img" name="image">
 
-    <br>
+        <?php if (isset($_GET['action']) == 'edit' && !empty($edit_post['image'])) : ?>
+            <img src="/uploads/<?= $edit_post['image'] ?>" width="200">
+            <br>
+            <input type="checkbox" name="checkDelImage" id="del_image">
+            <label for="del_image">Удалить изображение</label>
+        <?php endif; ?>
+        <br>
+        <label for="img">Загрузите изображение</label>
+        <input type="file" id="img" name="image">
 
-    <input class="btn" type="submit" value="<?= $formText ?>">
-</form>
-<ul>
-    <?php foreach ($posts as $item) : ?>
-        <li>
-            <a class="content" href="/post.php?id=<?= $item['id'] ?>"><?= $item['title'] ?></a>
-            <a href="?id=<?= $item['id'] ?>&action=edit">[edit]</a>
-            <a href="?id=<?= $item['id'] ?>&action=delete">[delete]</a>
-            <hr class="line">
-        </li>
-    <?php endforeach; ?>
-</ul>
-</body>
-</html>
+        <br>
+
+        <input class="btn" type="submit" value="<?= $formText ?>">
+    </form>
+    <ul>
+        <?php foreach ($posts as $item) : ?>
+            <li>
+                <a class="content" href="/post.php?id=<?= $item['id'] ?>"><?= $item['title'] ?></a>
+                <a href="?id=<?= $item['id'] ?>&action=edit">[edit]</a>
+                <a href="?id=<?= $item['id'] ?>&action=delete">[delete]</a>
+                <hr class="line">
+            </li>
+        <?php endforeach; ?>
+    </ul>
+    </body>
+    </html>
+<?php else : ?>
+    <?php die('You do not have access') ?>
+<?php endif; ?>

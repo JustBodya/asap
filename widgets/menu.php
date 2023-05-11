@@ -1,7 +1,5 @@
 <?php
 include_once './widgets/login.php';
-include dirname(__DIR__) . '/functions/isAdmin.php';
-
 ?>
 
 <a href="./index.php">Главная</a>

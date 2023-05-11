@@ -38,10 +38,4 @@ getConnection()->query(insertPostQuery('Меркурий', 'Самая близ�
 getConnection()->query(insertRolesQuery('admin'));
 getConnection()->query(insertRolesQuery('user'));
 
-
-
-
-
-
-
-
+getConnection()->query(insertUsersQuery('admin', '123', '1'));
