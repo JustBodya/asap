@@ -2,6 +2,9 @@
 include dirname(__DIR__) . "/functions/db.php";
 include dirname(__DIR__) . '/functions/auth.php';
 
+if (!isAdmin()) die('You do not have access');
+
+
 $messages = [
     'add' => 'Категория добавлена',
     'del' => 'Категория удалена',
@@ -59,42 +62,37 @@ if (!empty($_POST) && $_GET['action'] == 'save') {
 $result = getConnection()->query("SELECT id, name FROM categories ORDER BY id DESC;");
 $printCategories = $result->fetchAll();
 ?>
-<?php if (isAdmin()) : ?>
-
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Админка категории</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-    <body>
-    <header>
-        <?php include dirname(__DIR__) . "/widgets/admin.php" ?>
-    </header>
-    <h1 class="title">CRUD Категории</h1>
-    <form action="?action=<?= $action ?>" method="post">
-        <label for="name">Название категории</label>
-        <input id="name" class="input" type="text" name="name" value="<?= $edit['name'] ?>"> <br> <br>
-        <input hidden type="text" name="id" value="<?= $edit['id'] ?>">
-        <input class="btn" type="submit" value="<?= $formText ?>">
-    </form>
-    <h3 class="change"><?= $message ?></h3>
-    <ul>
-        <?php foreach ($printCategories as $i) : ?>
-            <li>
-                <?= $i['name'] ?>
-                <a href="?id=<?= $i['id'] ?>&action=edit">[edit]</a>
-                <a href="?id=<?= $i['id'] ?>&action=del">[delete]</a>
-                <hr class="line">
-            </li>
-        <?php endforeach; ?>
-    </ul>
-    </body>
-    </html>
-<?php else : ?>
-    <?php die('You do not have access') ?>
-<?php endif; ?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Админка категории</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+    <?php include dirname(__DIR__) . "/widgets/admin.php" ?>
+</header>
+<h1 class="title">CRUD Категории</h1>
+<form action="?action=<?= $action ?>" method="post">
+    <label for="name">Название категории</label>
+    <input id="name" class="input" type="text" name="name" value="<?= $edit['name'] ?>"> <br> <br>
+    <input hidden type="text" name="id" value="<?= $edit['id'] ?>">
+    <input class="btn" type="submit" value="<?= $formText ?>">
+</form>
+<h3 class="change"><?= $message ?></h3>
+<ul>
+    <?php foreach ($printCategories as $i) : ?>
+        <li>
+            <?= $i['name'] ?>
+            <a href="?id=<?= $i['id'] ?>&action=edit">[edit]</a>
+            <a href="?id=<?= $i['id'] ?>&action=del">[delete]</a>
+            <hr class="line">
+        </li>
+    <?php endforeach; ?>
+</ul>
+</body>
+</html>

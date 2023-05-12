@@ -7,9 +7,9 @@ if (isset($_POST['login'])) {
     $password = strip_tags($_POST['password']);
 
     if (auth($login, $password)) {
-        $_SESSION['login'] = $login;
+        $_SESSION['auth']['login'] = $login;
 
-        if ($login === 'admin') $_SESSION['role'] = '1';
+        if ($login === 'admin') $_SESSION['auth']['role'] = '1';
 
         header('Location: /');
         die();
@@ -20,7 +20,7 @@ if (isset($_POST['login'])) {
 
 function isAdmin(): bool
 {
-    return isset($_SESSION['role']) == '1';
+    return isset($_SESSION['auth']['role']) == '1';
 }
 
 function auth($login, $password)
@@ -38,14 +38,14 @@ function auth($login, $password)
 
 $auth = false;
 
-if (isset($_SESSION['login'])) {
+if (isset($_SESSION['auth']['login'])) {
     $auth = true;
-    $userName = $_SESSION['login'];
+    $userName = $_SESSION['auth']['login'];
 }
 
 if (isset($_GET['logout'])) {
-    unset($_SESSION['login']);
-    unset($_SESSION['role']);
+    unset($_SESSION['auth']['login']);
+    unset($_SESSION['auth']['role']);
     header('Location: /');
     die();
 }
