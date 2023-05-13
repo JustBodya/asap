@@ -12,8 +12,12 @@ class User
     public int $role;
     private Db $db;
 
-    public function __construct(Db $db)
+    public function __construct($id, $login, $password, $role, Db $db)
     {
+        $this->id = $id;
+        $this->login = $login;
+        $this->password = $password;
+        $this->role = $role;
         $this->db = $db;
     }
 

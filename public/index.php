@@ -10,13 +10,14 @@ spl_autoload_register([new Autoload(), 'loadClass']);
 
 $db = 'your db';
 
-$user = new User(new Db($db));
-$user2 = new User(new Db($db));
-
+$user = new User(1, 'admin', '123', '1', new Db($db));
+$user2 = new User(2, 'user', '', '2', new Db($db));
 
 $user->getOne(1);
+var_dump($user);
 $user2->getOne(2);
+var_dump($user2);
 
-$post = new Post();
+$post = new Post(1, 'Животные', 'фыоафшоыад.шо', 1, 'some-path');
 
-$post->printSomeText();
+var_dump($post);

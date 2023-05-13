@@ -9,6 +9,15 @@ class Post
     public int $id_category;
     public string $image;
 
+    public function __construct($id, $title, $content, $id_category, $image)
+    {
+        $this->id = $id;
+        $this->title = $title;
+        $this->content = $content;
+        $this->id_category = $id_category;
+        $this->image = $image;
+    }
+
     public function printSomeText(): void
     {
         echo 'hello';
